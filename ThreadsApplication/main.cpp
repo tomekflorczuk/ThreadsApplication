@@ -1,3 +1,5 @@
+// ThreadsApplication.cpp : Defines the entry point for the console application.
+//
 #include "stdafx.h"
 
 using namespace std;
@@ -18,14 +20,17 @@ void NewBall(Ball ball)
 	{
 		ball.CheckFrame(maxx, maxy);
 		ball.MoveBall();
-		mvprintw(ball.prevy, ball.prevx, " ");
-		mvprintw(ball.y, ball.x, &point);
+		move(ball.prevy, ball.prevx);
+		printw(" ");
+		move(ball.y, ball.x);
 		Sleep(ball.velocity);
+		printw(&point);
 		refresh();
 	} while (ball.velocity < 1000);
 	//Usuwanie kulki
 	move(ball.y, ball.x);
 	printw(" ");
+	refresh();
 }
 //Czekanie na wciœniecie klawisza 'x' - wyjœcia
 void WaitForInput()
@@ -35,40 +40,28 @@ void WaitForInput()
 		c = getch();
 	}
 }
-//Odœwie¿anie ekranu co milisekunde
-void WindowRefresh()
-{
-	//Sleep(50);
-	refresh();
-}
 //Program g³ówny
 void main()
 {
-	srand(time(nullptr));
+	srand(time(NULL));
 	//Inicjalizacja
 	initscr();
 	noecho();
-	//auto n = thread::hardware_concurrency();
 	//Zczytywanie wielkoœci okna
 	getmaxyx(stdscr, maxy, maxx);
 	//Tworzenie w¹tku zakoñczenia programu
 	threads.push_back(thread(WaitForInput));
-	//Tworzenie w¹tku odœwie¿ania erkanu co sekunde
-	//threads.push_back(thread(WindowRefresh));
 	//G³ówna pêtla programu
 	while(c != 'x')
 	{
 		//Tworzenie nowej kulki
-		//Ball* ball = new Ball(rand() % maxx);
-		Ball ball(rand()% maxx);
+		Ball* ball = new Ball(rand() % maxx);
 		//Tworzenie nowego w¹tku kulki
-		threads.push_back(thread(NewBall, ball));
+		threads.push_back(thread(NewBall, *ball));
 		//Czekanie 5 sekund na utworzenie nowego w¹tku
 		Sleep(5000);
 	}
-	endwin();
 	//Joinowanie wszystkich w¹tków
 	for (auto& th : threads) th.join();
-	//Usuwanie w¹tków
-	threads.clear();
+	endwin();
 }

@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Ball.h"
+
 //Konstruktor
 Ball::Ball(int initx)
 {
@@ -8,7 +9,7 @@ Ball::Ball(int initx)
 	x = initx;
 	y = 0;
 	dir = rand() % 4;
-	velocity = rand() % 200 + 50;
+	velocity = rand() % 1000;
 }
 //Destruktor
 Ball::~Ball()
