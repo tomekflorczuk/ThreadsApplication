@@ -10,8 +10,7 @@ vector<thread> threads;
 void NewBall(Ball ball)
 {
 	//Wypisanie kulki w losowym punkcie na górze ekranu
-	move(ball.y, ball.x);
-	printw(&point);
+	mvprintw(ball.y, ball.x, &point);
 	refresh();
 	//Poruszanie siê kulki
 	do
@@ -24,8 +23,7 @@ void NewBall(Ball ball)
 		refresh();
 	} while (ball.velocity < 1000);
 	//Usuwanie kulki
-	move(ball.y, ball.x);
-	printw(" ");
+	mvprintw(ball.y, ball.x, " ");
 }
 //Czekanie na wcisniecie klawisza 'x' - wyjscia
 void WaitForInput()
