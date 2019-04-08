@@ -27,7 +27,7 @@ void NewBall(Ball ball)
 	move(ball.y, ball.x);
 	printw(" ");
 }
-//Czekanie na wciœniecie klawisza 'x' - wyjœcia
+//Czekanie na wcisniecie klawisza 'x' - wyjscia
 void WaitForInput()
 {
 	while(c != 'x')
@@ -35,7 +35,7 @@ void WaitForInput()
 		c = getch();
 	}
 }
-//Odœwie¿anie ekranu co milisekunde
+//Odswiezanie ekranu co milisekunde
 void WindowRefresh()
 {
 	//Sleep(50);
@@ -48,27 +48,25 @@ void main()
 	//Inicjalizacja
 	initscr();
 	noecho();
-	//auto n = thread::hardware_concurrency();
 	//Zczytywanie wielkoœci okna
 	getmaxyx(stdscr, maxy, maxx);
-	//Tworzenie w¹tku zakoñczenia programu
+	//Tworzenie watku zakonczenia programu
 	threads.push_back(thread(WaitForInput));
-	//Tworzenie w¹tku odœwie¿ania erkanu co sekunde
+	//Tworzenie watku odswiezania ekranu co sekunde
 	//threads.push_back(thread(WindowRefresh));
-	//G³ówna pêtla programu
+	//Glowna petla programu
 	while(c != 'x')
 	{
 		//Tworzenie nowej kulki
-		//Ball* ball = new Ball(rand() % maxx);
 		Ball ball(rand()% maxx);
-		//Tworzenie nowego w¹tku kulki
+		//Tworzenie nowego watku kulki
 		threads.push_back(thread(NewBall, ball));
-		//Czekanie 5 sekund na utworzenie nowego w¹tku
+		//Czekanie 5 sekund na utworzenie nowego watku
 		Sleep(5000);
 	}
 	endwin();
-	//Joinowanie wszystkich w¹tków
+	//Joinowanie wszystkich watkow
 	for (auto& th : threads) th.join();
-	//Usuwanie w¹tków
+	//Usuwanie watkow
 	threads.clear();
 }

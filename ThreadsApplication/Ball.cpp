@@ -15,7 +15,7 @@ Ball::Ball(int initx)
 Ball::~Ball()
 {
 }
-//Poruszanie kulki w zale¿noœci od kieruku
+//Poruszanie kulki w zaleznosci od kieruku
 void Ball::MoveBall()
 {
 	//Poruszanie siê w zale¿noœci od kierunku
@@ -91,7 +91,7 @@ void Ball::MoveBall()
 	}
 	}
 }
-//Sprawdzanie osi¹gniecia granic ekranu
+//Sprawdzanie osiagniecia granic ekranu
 void Ball::CheckFrame(int maxx, int maxy)
 {
 	if (prevy != -1 && prevx != -1)
