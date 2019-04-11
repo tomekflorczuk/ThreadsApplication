@@ -3,7 +3,7 @@
 using namespace std;
 //Zmienne globalne
 const char point = 'o';
-int maxx, maxy;
+unsigned int maxx, maxy;
 char c;
 vector<thread> threads;
 //Funkcja pojedynczej kulki
@@ -21,9 +21,10 @@ void NewBall(Ball ball)
 		mvprintw(ball.y, ball.x, &point);
 		Sleep(ball.velocity);
 		refresh();
-	} while (ball.velocity < 1000);
-	//Usuwanie kulki
+	} while (ball.velocity < 700);
+	//Czyszczenie kulki
 	mvprintw(ball.y, ball.x, " ");
+	refresh();
 }
 //Czekanie na wcisniecie klawisza 'x' - wyjscia
 void WaitForInput()
@@ -33,11 +34,14 @@ void WaitForInput()
 		c = getch();
 	}
 }
-//Odswiezanie ekranu co milisekunde
+//Odswiezanie ekranu
 void WindowRefresh()
 {
-	//Sleep(50);
-	refresh();
+	while (true)
+	{
+		Sleep(50);
+		refresh();
+	}
 }
 //Program g³ówny
 void main()
@@ -50,7 +54,7 @@ void main()
 	getmaxyx(stdscr, maxy, maxx);
 	//Tworzenie watku zakonczenia programu
 	threads.push_back(thread(WaitForInput));
-	//Tworzenie watku odswiezania ekranu co sekunde
+	//Tworzenie watku odswiezania ekranu
 	//threads.push_back(thread(WindowRefresh));
 	//Glowna petla programu
 	while(c != 'x')
@@ -62,9 +66,9 @@ void main()
 		//Czekanie 5 sekund na utworzenie nowego watku
 		Sleep(5000);
 	}
-	endwin();
 	//Joinowanie wszystkich watkow
 	for (auto& th : threads) th.join();
 	//Usuwanie watkow
 	threads.clear();
+	endwin();
 }

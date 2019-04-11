@@ -9,7 +9,7 @@ Ball::Ball(int initx)
 	x = initx;
 	y = 0;
 	dir = rand() % 4;
-	velocity = rand() % 1000;
+	velocity = rand() % 50;
 }
 //Destruktor
 Ball::~Ball()
