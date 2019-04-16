@@ -1,45 +1,56 @@
 #include "stdafx.h"
+#include <algorithm>
 
 using namespace std;
 //Zmienne globalne
 const char point = 'o';
 unsigned int maxx, maxy;
+bool running;
 char c;
-vector<thread> threads;
+list<thread> threads;
+CRITICAL_SECTION critical;
 //Funkcja pojedynczej kulki
 void NewBall(Ball ball)
 {
 	//Wypisanie kulki w losowym punkcie na górze ekranu
+	EnterCriticalSection(&critical);
 	mvprintw(ball.y, ball.x, &point);
-	refresh();
+	LeaveCriticalSection(&critical);
 	//Poruszanie siê kulki
 	do
 	{
 		ball.CheckFrame(maxx, maxy);
 		ball.MoveBall();
-		mvprintw(ball.prevy, ball.prevx, " ");
+		EnterCriticalSection(&critical);
 		mvprintw(ball.y, ball.x, &point);
-		Sleep(ball.velocity);
-		refresh();
-	} while (ball.velocity < 700);
+		mvprintw(ball.prevy, ball.prevx, " ");
+		LeaveCriticalSection(&critical);
+		this_thread::sleep_for(chrono::milliseconds(ball.velocity));
+		//Sleep(ball.velocity);
+	} while (ball.velocity < 700 && running);
 	//Czyszczenie kulki
+	EnterCriticalSection(&critical);
 	mvprintw(ball.y, ball.x, " ");
-	refresh();
+	LeaveCriticalSection(&critical);
 }
 //Czekanie na wcisniecie klawisza 'x' - wyjscia
-void WaitForInput()
+void WaitForInput(bool& running)
 {
-	while(c != 'x')
+	while(running)
 	{
 		c = getch();
+		if (c == 'x')
+		{
+			running = false;
+		}
 	}
 }
 //Odswiezanie ekranu
 void WindowRefresh()
 {
-	while (true)
+	while (running)
 	{
-		Sleep(50);
+		this_thread::sleep_for(chrono::milliseconds(50));
 		refresh();
 	}
 }
@@ -50,25 +61,31 @@ void main()
 	//Inicjalizacja
 	initscr();
 	noecho();
+	curs_set(0);
+	running = true;
 	//Zczytywanie wielkoœci okna
 	getmaxyx(stdscr, maxy, maxx);
+	InitializeCriticalSection(&critical);
+	SetCriticalSectionSpinCount(&critical, 100);
 	//Tworzenie watku zakonczenia programu
-	threads.push_back(thread(WaitForInput));
+	thread exitthread(WaitForInput, ref(running));
 	//Tworzenie watku odswiezania ekranu
-	//threads.push_back(thread(WindowRefresh));
+	thread refreshthread(WindowRefresh);
 	//Glowna petla programu
-	while(c != 'x')
+	while(running)
 	{
 		//Tworzenie nowej kulki
 		Ball ball(rand()% maxx);
 		//Tworzenie nowego watku kulki
-		threads.push_back(thread(NewBall, ball));
+		threads.push_front(thread(NewBall, ball));
 		//Czekanie 5 sekund na utworzenie nowego watku
 		Sleep(5000);
 	}
 	//Joinowanie wszystkich watkow
-	for (auto& th : threads) th.join();
-	//Usuwanie watkow
-	threads.clear();
+	exitthread.join();
+	refreshthread.join();
+	for (auto& th : threads)
+		th.join();
+	DeleteCriticalSection(&critical);
 	endwin();
 }

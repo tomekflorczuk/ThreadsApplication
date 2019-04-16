@@ -14,7 +14,7 @@
 #include <curses.h>
 #include <thread>
 #include <time.h>
-#include <vector>
+#include <list>
 #include "Ball.h"
 
 // TODO: reference additional headers your program requires here
