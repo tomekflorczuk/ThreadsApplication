@@ -8,13 +8,15 @@
 #include "targetver.h"
 
 #include <iostream>
-#include <stdio.h>
+#include <cstdio>
 #include <windows.h>
 #include <tchar.h>
 #include <curses.h>
 #include <thread>
-#include <time.h>
-#include <list>
+#include <mutex>
+#include <condition_variable>
+#include <atomic>
+#include <memory>
+#include <ctime>
+#include <vector>
 #include "Ball.h"
-
-// TODO: reference additional headers your program requires here

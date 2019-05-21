@@ -2,7 +2,7 @@
 #include "Ball.h"
 
 //Konstruktor
-Ball::Ball(int initx)
+ball::ball(int initx)
 {
 	prevy = -1;
 	prevx = -1;
@@ -10,13 +10,10 @@ Ball::Ball(int initx)
 	y = 0;
 	dir = rand() % 4;
 	velocity = rand() % 50;
-}
-//Destruktor
-Ball::~Ball()
-{
+	deflectioncounter = 0;
 }
 //Poruszanie kulki w zaleznosci od kieruku
-void Ball::MoveBall()
+void ball::move_ball()
 {
 	//Poruszanie siê w zale¿noœci od kierunku
 	switch (dir)
@@ -92,7 +89,7 @@ void Ball::MoveBall()
 	}
 }
 //Sprawdzanie osiagniecia granic ekranu
-void Ball::CheckFrame(int maxx, int maxy)
+void ball::check_frame(const int maxx,const int maxy)
 {
 	if (prevy != -1 && prevx != -1)
 	{
@@ -102,6 +99,7 @@ void Ball::CheckFrame(int maxx, int maxy)
 			else if (x < prevx || x == maxx - 1) dir = 7;
 			else dir = 6;	
 			velocity *= 2;
+			deflectioncounter++;
 		}
 		else if (y == 0)
 		{
@@ -109,6 +107,7 @@ void Ball::CheckFrame(int maxx, int maxy)
 			else if (x < prevx || x == maxx - 1) dir = 1;
 			else dir = 2;
 			velocity *= 2;
+			deflectioncounter++;
 		}
 		else if (x == maxx - 1)
 		{
@@ -116,6 +115,7 @@ void Ball::CheckFrame(int maxx, int maxy)
 			else if (y < prevy) dir = 7;
 			else dir = 0;
 			velocity *= 2;
+			deflectioncounter++;
 		}
 		else if (x == 0)
 		{
@@ -123,6 +123,7 @@ void Ball::CheckFrame(int maxx, int maxy)
 			else if (y < prevy) dir = 5;
 			else dir = 4;
 			velocity *= 2;
+			deflectioncounter++;
 		}
 	}
 }

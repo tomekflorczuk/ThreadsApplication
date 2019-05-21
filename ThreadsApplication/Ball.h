@@ -1,10 +1,9 @@
 #pragma once
-class Ball
+class ball
 {
 public:
-	int x, y, prevx, prevy, dir, velocity;
-	Ball(int initx);
-	~Ball();
-	void MoveBall();
-	void CheckFrame(int maxx, int maxy);
+	int x, y, prevx, prevy, dir, velocity, deflectioncounter;
+	ball(int initx);
+	void move_ball();
+	void check_frame(int maxx, int maxy);
 };
