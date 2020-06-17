@@ -1,2 +1,2 @@
 # ThreadsApplication
-Simple console application using multithreading
+Simple C++ console application using multithreading
